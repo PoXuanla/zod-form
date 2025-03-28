@@ -1,0 +1,26 @@
+{
+  "name": "nuxt-zod-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.3.4",
+    "@nuxt/ui": "^2.12.3",
+    "nuxt": "^3.9.0",
+    "react-hook-form": "^7.49.2",
+    "vue": "^3.3.12",
+    "vue-router": "^4.2.5",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3"
+  }
+} 
