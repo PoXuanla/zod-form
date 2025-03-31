@@ -61,12 +61,7 @@ const onSubmit = handleSubmit((values) => {
 });
 
 // 即时验证函数
-const validateName = () => validateField("name");
-const validateEmail = () => validateField("email");
-const validateAge = () => validateField("age");
-const validateWebsite = () => validateField("website");
-const validatePassword = () => validateField("password");
-const validateConfirmPassword = () => validateField("confirmPassword");
+
 </script>
 
 <template>
@@ -85,7 +80,6 @@ const validateConfirmPassword = () => validateField("confirmPassword");
           <UInput
             v-model="form.name"
             placeholder="请输入姓名"
-            @input="validateName"
           />
         </UFormGroup>
       </div>
@@ -96,7 +90,6 @@ const validateConfirmPassword = () => validateField("confirmPassword");
           <UInput
             v-model="form.email"
             placeholder="请输入电子邮件"
-            @input="validateEmail"
           />
         </UFormGroup>
       </div>
@@ -108,7 +101,6 @@ const validateConfirmPassword = () => validateField("confirmPassword");
             v-model="form.age"
             type="number"
             placeholder="请输入年龄"
-            @input="validateAge"
           />
         </UFormGroup>
       </div>
@@ -119,7 +111,6 @@ const validateConfirmPassword = () => validateField("confirmPassword");
           <UInput
             v-model="form.website"
             placeholder="请输入网站URL"
-            @input="validateWebsite"
           />
         </UFormGroup>
       </div>
@@ -131,7 +122,6 @@ const validateConfirmPassword = () => validateField("confirmPassword");
             v-model="form.password"
             type="password"
             placeholder="请输入密码"
-            @input="validatePassword"
           />
         </UFormGroup>
       </div>
@@ -143,7 +133,6 @@ const validateConfirmPassword = () => validateField("confirmPassword");
             v-model="form.confirmPassword"
             type="password"
             placeholder="请再次输入密码"
-            @input="validateConfirmPassword"
           />
         </UFormGroup>
       </div>

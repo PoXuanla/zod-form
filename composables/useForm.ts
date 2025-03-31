@@ -86,6 +86,7 @@ export function useForm<T extends z.ZodTypeAny>({
 
       // 查找对应路径的错误
       const pathParts = path.split(".");
+      console.log(path, pathParts);
       let errorObj: any = formattedErrors;
 
       // 逐级查找嵌套路径中的错误
@@ -144,7 +145,20 @@ export function useForm<T extends z.ZodTypeAny>({
       }
     };
   };
-
+  
+  const bindDynamicValid = () => {
+    for (const key in form) {
+      watch(
+        () => form[key],
+        () => {
+          console.log("defaultValues changed");
+          validateField(key);
+        }
+      );
+    }
+  };
+  
+  bindDynamicValid();
   return {
     form,
     errors,

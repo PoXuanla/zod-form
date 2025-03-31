@@ -77,7 +77,7 @@ const formSchema = z
   );
 
 // 表单默认值
-const defaultValues = {
+const defaultValues = reactive({
   fullName: "",
   role: "viewer" as const,
   paymentMethod: "alipay" as const,
@@ -89,7 +89,7 @@ const defaultValues = {
   },
   creditCardNumber: "",
   birthDate: "",
-};
+});
 
 // 兴趣选项
 const interestOptions = [
@@ -129,7 +129,7 @@ watch(errors, (newVal) => {
 
 // 添加组件挂载后的初始验证
 onMounted(() => {
-  validate();
+  // validate();
 });
 
 // 提交处理
