@@ -3,6 +3,13 @@ import { z } from "zod";
 import { useForm } from "@/composables/useForm";
 import { onMounted } from "vue";
 
+const aaSchema = z.object({
+  zipCode: z
+    .string()
+    .min(1, "邮政编码不能为空")
+    .regex(/^\d{6}$/, "邮政编码必须为6位数字"),
+});
+
 // 定义内部架构
 const AddressSchema = z.object({
   street: z
@@ -10,10 +17,7 @@ const AddressSchema = z.object({
     .min(1, "街道地址不能为空")
     .min(5, "街道地址至少需要5个字符"),
   city: z.string().min(1, "城市名称不能为空").min(2, "城市名称至少需要2个字符"),
-  zipCode: z
-    .string()
-    .min(1, "邮政编码不能为空")
-    .regex(/^\d{6}$/, "邮政编码必须为6位数字"),
+  aa: aaSchema,
 });
 
 // 定义枚举值和联合类型
@@ -77,7 +81,7 @@ const formSchema = z
   );
 
 // 表单默认值
-const defaultValues = reactive({
+const defaultValues = {
   fullName: "",
   role: "viewer" as const,
   paymentMethod: "alipay" as const,
@@ -85,11 +89,13 @@ const defaultValues = reactive({
   address: {
     street: "",
     city: "",
-    zipCode: "",
+    aa: {
+      zipCode: "",
+    },
   },
   creditCardNumber: "",
   birthDate: "",
-});
+};
 
 // 兴趣选项
 const interestOptions = [
@@ -121,6 +127,7 @@ const { form, errors, isSubmitting, handleSubmit, validateField, validate } =
   useForm({
     schema: formSchema,
     defaultValues,
+    enabled: { dynamicValid: true },
   });
 
 watch(errors, (newVal) => {
@@ -210,18 +217,13 @@ const validateZipCode = () => {
 
         <div class="grid grid-cols-2 gap-4 mt-4">
           <UFormGroup label="城市" :error="errors['address.city']">
-            <UInput
-              v-model="form.address.city"
-              placeholder="请输入城市"
-              @input="validateCity"
-            />
+            <UInput v-model="form.address.city" placeholder="请输入城市" />
           </UFormGroup>
 
-          <UFormGroup label="邮政编码" :error="errors['address.zipCode']">
+          <UFormGroup label="邮政编码" :error="errors['address.aa.zipCode']">
             <UInput
-              v-model="form.address.zipCode"
+              v-model="form.address.aa.zipCode"
               placeholder="请输入6位邮政编码"
-              @input="validateZipCode"
             />
           </UFormGroup>
         </div>

@@ -4,11 +4,15 @@ import { z } from "zod";
 interface UseFormOptions<T extends z.ZodTypeAny> {
   schema: T;
   defaultValues: z.infer<T>;
+  enabled?: {
+    dynamicValid?: boolean;
+  };
 }
 
 export function useForm<T extends z.ZodTypeAny>({
   schema,
   defaultValues,
+  enabled,
 }: UseFormOptions<T>) {
   // 表单数据
   const form = reactive({ ...defaultValues } as z.infer<T>);
@@ -80,13 +84,10 @@ export function useForm<T extends z.ZodTypeAny>({
   const validateField = (path: string) => {
     // 使用schema直接验证整个表单
     const result = schema.safeParse(form);
-
     if (!result.success) {
       const formattedErrors = result.error.format();
-
       // 查找对应路径的错误
       const pathParts = path.split(".");
-      console.log(path, pathParts);
       let errorObj: any = formattedErrors;
 
       // 逐级查找嵌套路径中的错误
@@ -126,12 +127,10 @@ export function useForm<T extends z.ZodTypeAny>({
     onSubmit: (values: z.infer<T>) => void | Promise<void>
   ) => {
     return async () => {
-      console.log("handleSubmit");
       // 验证表单
       const isValid = validate();
 
       if (!isValid) {
-        console.log("validate failed");
         return;
       }
 
@@ -145,20 +144,28 @@ export function useForm<T extends z.ZodTypeAny>({
       }
     };
   };
-  
-  const bindDynamicValid = () => {
-    for (const key in form) {
-      watch(
-        () => form[key],
-        () => {
-          console.log("defaultValues changed");
-          validateField(key);
-        }
-      );
+
+  const bindDynamicValid = (values: any, parent = "") => {
+    for (const key in values) {
+      if (typeof values[key] === "object") {
+        parent.length === 0
+          ? bindDynamicValid(values[key], key)
+          : bindDynamicValid(values[key], `${parent}.${key}`);
+      } else {
+        watch(
+          () => values[key],
+          () => {
+            parent.length === 0
+              ? validateField(key)
+              : validateField(`${parent}.${key}`);
+          }
+        );
+      }
     }
   };
-  
-  bindDynamicValid();
+
+  if (enabled && enabled.dynamicValid) bindDynamicValid(form);
+
   return {
     form,
     errors,
